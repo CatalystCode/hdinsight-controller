@@ -115,8 +115,7 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "name": "[variables('webAppName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-        "hostingEnvironment": ""
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
@@ -135,6 +134,7 @@
             "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
             "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
             "FUNCTIONS_EXTENSION_VERSION": "latest",
+            "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
 
             "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
             "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
@@ -159,6 +159,17 @@
             "location": "[resourceGroup().location]",
             "clusterStorageAccountName": "[variables('storageAccountName')]",
             "clusterStorageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]"
+          }
+        },
+        {
+          "apiVersion": "2015-04-01",
+          "name": "web",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+          ],
+          "properties": {
+            "alwaysOn": "true"
           }
         },
         {
