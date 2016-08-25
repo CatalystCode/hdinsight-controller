@@ -1,0 +1,34 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appName": { 
+      "value": "examplededicatedfunctionapp" 
+    },
+    "repoURL": { 
+      "value": "https://github.com/CatalystCode/hdinsight-controller.git" 
+    },
+    "branch": { 
+      "value": "master" 
+    },
+
+		"servicePrincipalClientId": { "value": "00000000-0000-0000-0000-000000000000" },
+		"servicePrincipalSecret": { "value": "SERVICE PRINCIPAL CLIENT SECRET" },
+		"servicePrincipalDomain": { "value": "00000000-0000-0000-0000-000000000000" },
+		"servicePrincipalSubscriptionId": { "value": "00000000-0000-0000-0000-000000000000" },
+
+		"clusterName": { "value": "hdinsight-name" },
+		"clusterApiVersion": { "value": "2015-03-01-preview" },
+		"tags": { "value": "{}" },
+		"clusterVersion": { "value": "3.4"},
+		"osType": { "value": "Linux" },
+		"clusterType": { "value": "Spark" },
+		"clusterLoginUserName": { "value": "username" },
+		"clusterLoginPassword": { "value": "GEN-PASSWORD" },
+
+		"clusterNodeSize": { "value": "Standard_D12" },
+		"clusterWorkerNodeCount": { "value": "2" },
+		"sshUserName": { "value": "sshusername" },
+		"sshPassword": { "value": "GEN-PASSWORD" } 
+ }
+}
