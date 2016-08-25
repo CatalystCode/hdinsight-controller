@@ -110,11 +110,10 @@
     },
     {
       "apiVersion": "2015-04-01",
-      "type": "Microsoft.Web/sites",
       "name": "[variables('webAppName')]",
+      "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
       "properties": {
-        "name": "[variables('webAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
       },
       "dependsOn": [
@@ -123,7 +122,7 @@
       ],
       "resources": [
         {
-          "apiVersion": "2016-03-01",
+          "apiVersion": "2015-04-01",
           "name": "appsettings",
           "type": "config",
           "dependsOn": [
@@ -173,7 +172,7 @@
           }
         },
         {
-          "apiVersion": "2016-03-01",
+          "apiVersion": "2015-04-01",
           "name": "web",
           "type": "sourcecontrols",
           "dependsOn": [
