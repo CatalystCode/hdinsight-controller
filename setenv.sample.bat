@@ -1,23 +1,24 @@
-clientId=00000000-0000-0000-0000-000000000000
-secret=*******************************************=
-domain=00000000-0000-0000-0000-000000000000
-subscriptionId=00000000-0000-0000-0000-000000000000
+SET clientId=00000000-0000-0000-0000-000000000000
+SET secret=*******************************************=
+SET domain=00000000-0000-0000-0000-000000000000
+SET subscriptionId=00000000-0000-0000-0000-000000000000
 
-resourceGroupName=resource-group-name
-clusterName=hdinsight-cluster-name
-location=West Europe
-clusterApiVersion=2015-03-01-preview
-tags={}
-clusterVersion=3.4
-osType=Linux
-clusterType=Spark
-clusterLoginUserName=username
-clusterLoginPassword=*********
+SET resourceGroupName=resource-group-name
+SET clusterName=hdinsight-cluster-name
+SET functionAppName=function-app-name
+SET location=West Europe
+SET clusterApiVersion=2015-03-01-preview
+SET tags={}
+SET clusterVersion=3.4
+SET osType=Linux
+SET clusterType=Spark
+SET clusterLoginUserName=username
+SET clusterLoginPassword=*********
 
-clusterStorageAccountName=storage-service-name
-clusterStorageAccountKey=**************************************************************************************==
+SET clusterStorageAccountName=storage-service-name
+SET clusterStorageAccountKey=**************************************************************************************==
 
-clusterNodeSize=Standard_D12
-clusterWorkerNodeCount=2
-sshUserName=sshusername
-sshPassword=*********
+SET clusterNodeSize=Standard_D12
+SET clusterWorkerNodeCount=2
+SET sshUserName=sshusername
+SET sshPassword=*********

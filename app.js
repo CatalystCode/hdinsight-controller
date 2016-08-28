@@ -10,6 +10,7 @@ var swig = require('swig');
 
 var routes = require('./routes/index');
 var hdinsight = require('./routes/hdinsight');
+var functions = require('./routes/functions');
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/hdinsight', hdinsight);
+app.use('/functions', functions);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

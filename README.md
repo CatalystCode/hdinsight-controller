@@ -44,6 +44,22 @@ in [azuredeploy.parameters.json][deploy/azuredeploy.parameters.json]:
 * servicePrincipalSubscriptionId
 You can create a 'azuredeploy.parameters.private.json' copy which will not be checked in.
 
+Run The following with azure cli to deploy to the cloud:
+
+First, login to azure cli:
+```
+azure login
+```
+Then create a resource group (location can be 'West Europe'):
+```
+azure group create <resource group name> -l <location>
+```
+Now, deploy the json to the cloud:
+```
+cd deploy
+azure group deployment create -f azuredeploy.json -e azuredeploy.parameters.json <resource group name> <deployment name>
+```
+
 # Endpoints
 The following are the endpoints the web service exposes (for local running the service url is `localhost:3000`):
 * `http://{service url}/hdinsight/create`[POST]

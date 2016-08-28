@@ -60,6 +60,20 @@
         "description": "The branch of the GitHub repository to use."
       }
     },
+    "funcRepoURL": {
+      "type": "string",
+      "defaultValue": "https://github.com/morsh/functions.git",
+      "metadata": {
+        "description": "The URL for the GitHub repository that contains the project to deploy."
+      }
+    },
+    "funcBranch": {
+      "type": "string",
+      "defaultValue": "master",
+      "metadata": {
+        "description": "The branch of the GitHub repository to use."
+      }
+    },
 
     "servicePrincipalClientId": { "type": "string" },
 		"servicePrincipalSecret": { "type": "string" },
@@ -82,6 +96,7 @@
   },
   "variables": {
     "webAppName": "[parameters('appName')]",
+    "functionAppName": "[concat(parameters('appName'), '-func')]",
     "hostingPlanName": "[parameters('appName')]",
     "storageAccountName": "[concat(replace(parameters('appName'),'-',''),'store')]"      
   },
@@ -132,6 +147,8 @@
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
 
+            "functionAppName": "[variables('functionAppName')]",
+
             "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
             "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
             "servicePrincipalDomain": "[parameters('servicePrincipalDomain')]",
@@ -178,6 +195,75 @@
           "properties": {
             "RepoUrl": "[parameters('repoURL')]",
             "branch": "[parameters('branch')]",
+            "IsManualIntegration": false
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2015-04-01",
+      "type": "Microsoft.Web/sites",
+      "name": "[variables('functionAppName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "functionapp",
+      "properties": {
+        "name": "[variables('functionAppName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "hostingEnvironment": ""
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ],
+      "resources": [
+        {
+          "apiVersion": "2016-03-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+          ],
+          "properties": {
+            "connection_STORAGE": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "FUNCTIONS_EXTENSION_VERSION": "latest",
+            "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
+
+            "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
+            "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
+            "servicePrincipalDomain": "[parameters('servicePrincipalDomain')]",
+            "servicePrincipalSubscriptionId": "[parameters('servicePrincipalSubscriptionId')]",
+
+            "clusterName": "[parameters('clusterName')]",
+            "clusterApiVersion": "[parameters('clusterApiVersion')]",
+            "tags": "[parameters('tags')]",
+            "clusterVersion": "[parameters('clusterVersion')]",
+            "osType": "[parameters('osType')]",
+            "clusterType": "[parameters('clusterType')]",
+            "clusterLoginUserName": "[parameters('clusterLoginUserName')]",
+            "clusterLoginPassword": "[parameters('clusterLoginPassword')]",
+
+            "clusterNodeSize": "[parameters('clusterNodeSize')]",
+            "clusterWorkerNodeCount": "[parameters('clusterWorkerNodeCount')]",
+            "sshUserName": "[parameters('sshUserName')]",
+            "sshPassword": "[parameters('sshPassword')]",
+
+            "resourceGroupName": "[resourceGroup().name]",
+            "location": "[resourceGroup().location]",
+            "clusterStorageAccountName": "[variables('storageAccountName')]",
+            "clusterStorageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]"
+          }
+        },
+        {
+          "apiVersion": "2016-03-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('funcRepoURL')]",
+            "branch": "[parameters('funcBranch')]",
             "IsManualIntegration": false
           }
         }

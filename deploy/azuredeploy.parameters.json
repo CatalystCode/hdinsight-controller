@@ -5,12 +5,12 @@
     "appName": { 
       "value": "examplededicatedfunctionapp" 
     },
-    "repoURL": { 
-      "value": "https://github.com/CatalystCode/hdinsight-controller.git" 
-    },
-    "branch": { 
-      "value": "master" 
-    },
+
+    "repoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller.git" },
+    "branch": { "value": "master" },
+
+    "funcRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-func.git" },
+    "funcBranch": { "value": "master" },
 
 		"servicePrincipalClientId": { "value": "00000000-0000-0000-0000-000000000000" },
 		"servicePrincipalSecret": { "value": "SERVICE PRINCIPAL CLIENT SECRET" },
