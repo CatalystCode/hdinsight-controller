@@ -75,6 +75,10 @@ When getting an HDInsight cluster the result will be in the format:
 }
 ```
 
+# See Also
+This is the repository for the function app that acts as a proxy between the queue and the hdinsight cluster
+https://github.com/CatalystCode/hdinsight-controller-proxy
+
 [//]: # (Links section)
 
    [azure-cli]: <https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/>
