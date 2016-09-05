@@ -109,7 +109,12 @@
 		"sshPassword": { "type": "string" }, 
 
 		"inputQueueName": { "type": "string" },
-		"sendAlertUrl": { "type": "string" } 
+		"sendAlertUrl": { "type": "string" },
+
+		"jobExecutionIntervalInSeconds": { 
+      "type": "int", 
+      "defaultValue": 60
+    }     
   },
   "variables": {
     "webAppName": "[parameters('appName')]",
