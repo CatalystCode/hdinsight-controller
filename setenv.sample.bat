@@ -18,6 +18,9 @@ SET clusterLoginPassword=*********
 SET clusterStorageAccountName=storage-service-name
 SET clusterStorageAccountKey=**************************************************************************************==
 
+SET inputQueueName=pending-jobs
+SET sendAlertUrl=http://none.none
+
 SET clusterNodeSize=Standard_D12
 SET clusterWorkerNodeCount=2
 SET sshUserName=sshusername

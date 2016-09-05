@@ -9,8 +9,11 @@
     "repoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller.git" },
     "branch": { "value": "master" },
 
-    "funcRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-func.git" },
-    "funcBranch": { "value": "master" },
+    "proxyRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-proxy.git" },
+    "proxyBranch": { "value": "master" },
+
+    "orchRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-orch.git" },
+    "orchBranch": { "value": "master" },
 
 		"servicePrincipalClientId": { "value": "00000000-0000-0000-0000-000000000000" },
 		"servicePrincipalSecret": { "value": "SERVICE PRINCIPAL CLIENT SECRET" },
@@ -29,6 +32,9 @@
 		"clusterNodeSize": { "value": "Standard_D12" },
 		"clusterWorkerNodeCount": { "value": "2" },
 		"sshUserName": { "value": "sshusername" },
-		"sshPassword": { "value": "GEN-PASSWORD" } 
+		"sshPassword": { "value": "GEN-PASSWORD" },
+
+		"inputQueueName": { "value": "pending-jobs" },
+		"sendAlertUrl": { "value": "http://none.none" }
  }
 }
