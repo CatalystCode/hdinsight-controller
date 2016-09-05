@@ -28,7 +28,10 @@ function run(callback) {
     return callback(new Error('Config is not set'));
   }
 
-    // 1. Check statuses
+  // Making sure to update the *run every* x seconds
+  RUN_EVERY = config.jobExecutionIntervalInSeconds;
+
+  // 1. Check statuses
   console.log('Initializing statuses');
   var hdinsightManager = new HDInsightManager();
   var functionsManager = new FunctionsManager();
@@ -285,7 +288,7 @@ function run(callback) {
   }
 }
 
-setInterval(function () {
+function executeContinuously() {
   try {
     console.log('running job...');
 
@@ -300,5 +303,9 @@ setInterval(function () {
   } catch (err) {
       console.error('There was an unexpected error running the job:');
       console.error(err);    
+  } finally {
+    setTimeout(executeContinuously, RUN_EVERY * 1000);
   }
-}, RUN_EVERY * 1000);
+}
+
+setTimeout(executeContinuously, 100);

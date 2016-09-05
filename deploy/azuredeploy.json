@@ -195,6 +195,7 @@
 
             "inputQueueName": "[parameters('inputQueueName')]",
             "sendAlertUrl": "[parameters('sendAlertUrl')]",
+            "jobExecutionIntervalInSeconds": "[parameters('jobExecutionIntervalInSeconds')]",
 
             "resourceGroupName": "[resourceGroup().name]",
             "location": "[resourceGroup().location]",
