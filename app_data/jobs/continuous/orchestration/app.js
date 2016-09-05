@@ -99,7 +99,7 @@ function run(callback) {
     // 4. If queue is empty && hdinsight = ResourceNotFound && function is up
     // This state is illigal and might happen after first deployment ==> shut down functions
     console.log('If queue is empty && Livy jobs == 0 && hdinsight = ResourceNotFound && function is up');
-    if (status.queueLength === 0 && status.hdinsightStatus != 'ResourceNotFound' && status.funcActive) {
+    if (status.queueLength === 0 && status.hdinsightStatus == 'ResourceNotFound' && status.funcActive) {
         console.log('Stopping proxy app');
         return appServiceClient.stop(function (err) {
           if (err) { sendAlert({ error: err }); }
