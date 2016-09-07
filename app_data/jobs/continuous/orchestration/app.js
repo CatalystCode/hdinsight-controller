@@ -263,7 +263,7 @@ function run(callback) {
       }
 
       // Need to check validity and probably filter only running jobs
-      status.livyJobs = response.batches.length;
+      status.livyJobs = response.sessions && response.sessions.length || 0;
       console.info('livy jobs: ' + status.livyJobs);
       return callback();
     });
