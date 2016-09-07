@@ -122,8 +122,11 @@ function run(callback) {
         return callback();
       }
 
-      if (getMinutes(now - lastInactiveCheck) >= MAX_INACTIVE_TIME) {
+      var minutesPassed = getMinutes(now - lastInactiveCheck);
+      console.log('Minutes passed since inactivity of function app: ' + minutesPassed);
+      if (minutesPassed >= MAX_INACTIVE_TIME) {
         console.log('Stopping proxy app');
+        lastInactiveCheck = null;
         return appServiceClient.stop(function (err) {
           if (err) { sendAlert({ error: err }); }
           console.log('Operation completed successfully');
@@ -142,13 +145,15 @@ function run(callback) {
         return callback();
       }
 
-      if (getMinutes(now - lastInactiveCheck) >= MAX_INACTIVE_TIME) {
+      var minutesPassed = getMinutes(now - lastInactiveCheck);
+      console.log('Minutes passed since inactivity of hdinsight: ' + minutesPassed);
+      if (minutesPassed >= MAX_INACTIVE_TIME) {
         return hdinsightManager.deleteHDInsight(function (err) {
           if (err) { 
             sendAlert({ error: err }); 
           }
           else {
-            lastInactiveCheck = now; // If after 15 minutes hdinsight not down, try to delete again
+            lastInactiveCheck = null; // If after 15 minutes hdinsight not down, try to delete again
           }
           console.log('Operation completed successfully');
           return callback();
