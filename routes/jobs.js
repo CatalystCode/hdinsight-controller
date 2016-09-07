@@ -37,3 +37,5 @@ router.post('/push', function(req, res) {
   });
 
 });
+
+module.exports = router;
