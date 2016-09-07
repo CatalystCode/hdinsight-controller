@@ -1,6 +1,7 @@
 var azure = require('azure-storage');
 var async = require('async');
 var request = require('request');
+var _ = require('underscore');
 
 var FunctionsManager = require('../../../../lib/manage-functions');
 var HDInsightManager = require('../../../../lib/manage-hdinsight');
@@ -42,10 +43,13 @@ function run(callback) {
     funcError: null,
     funcActive: false,
     hdinsightError: null,
-    hdinsightActive: false,
+    hdinsightOperational: false,
     hdinsightStatus: null,
+    hdinsightProvisioningSuccess: false,
+    hdinsightProvisioningState: null,
     livyError: null,
-    livyJobs: 0
+    livyTotalJobs: 0,
+    livyRunningJobs: 0
   };
 
   async.parallel([
@@ -83,9 +87,9 @@ function run(callback) {
       })
     }
 
-    // 3. If queue is not empty && HDInsight is Running && Livy is alive && function is down ==> wake up function
+    // 3. If queue is not empty && HDInsight is operational && Livy is alive && function is down ==> wake up function
     console.info('If queue is not empty && HDInsight is Running && Livy is alive && function is down ==> wake up function');
-    if (status.queueLength > 0 && status.hdinsightStatus == 'Running' && !status.funcActive) {
+    if (status.queueLength > 0 && status.hdinsightOperational && !status.funcActive) {
       console.log('Starting proxy app');
       return appServiceClient.start(function (err) {
         if (err) { sendAlert({ error: err }); }
@@ -110,7 +114,7 @@ function run(callback) {
 
     // 5. If queue is empty && Livy jobs == 0 && function is up | more than 15 minutes ==> shut down functions
     console.info('If queue is empty && Livy jobs == 0 && function is up | more than 15 minutes ==> shut down functions');
-    if (status.queueLength === 0 && status.livyJobs === 0 && status.hdinsightStatus != 'ResourceNotFound' && status.funcActive) {
+    if (status.queueLength === 0 && status.livyRunningJobs === 0 && status.hdinsightOperational && status.funcActive) {
       var now = new Date();
       if (!lastInactiveCheck) {
         lastInactiveCheck = now;
@@ -130,7 +134,7 @@ function run(callback) {
     
     // 6. If queue is empty && Livy jobs == 0 && function is down | more than 15 minutes ==> shut down HDInsight
     console.info('If queue is empty && Livy jobs == 0 && function is down | more than 15 minutes ==> shut down HDInsight');
-    if (status.queueLength === 0 && status.livyJobs === 0 && status.hdinsightStatus != 'ResourceNotFound' && status.funcActive) {
+    if (status.queueLength === 0 && status.livyRunningJobs === 0 && status.hdinsightOperational && status.funcActive) {
       var now = new Date();
       if (!lastInactiveCheck) {
         lastInactiveCheck = now;
@@ -225,13 +229,20 @@ function run(callback) {
         }
 
         if (result && result.cluster && result.cluster.properties && result.cluster.properties.provisioningState) {
-          status.hdinsightActive = result.cluster.properties.provisioningState == 'Running';
-          status.hdinsightStatus = result.cluster.properties.provisioningState;
+          status.hdinsightProvisioningSuccess = result.cluster.properties.provisioningState == 'Succeeded';
+          status.hdinsightProvisioningState = result.cluster.properties.provisioningState;
         } else {
           status.hdinsightError = new Error('The resulting resource is not in an expected format: ' + result);
         }
 
-        console.info('hdinsight state: ' + status.hdinsightStatus);
+        if (result && result.cluster && result.cluster.properties && result.cluster.properties.clusterState) {
+          status.hdinsightStatus = result.cluster.properties.clusterState;
+          status.hdinsightOperational = result.cluster.properties.clusterState == 'Running' && status.hdinsightProvisioningSuccess;
+        } else {
+          status.hdinsightError = new Error('The resulting resource is not in an expected format: ' + result);
+        }
+
+        console.info('hdinsight state: ' + status.hdinsightStatus + ' with provisioning ' + status.hdinsightProvisioningState);
         return callback();
       });
 
@@ -263,8 +274,9 @@ function run(callback) {
       }
 
       // Need to check validity and probably filter only running jobs
-      status.livyJobs = response.sessions && response.sessions.length || 0;
-      console.info('livy jobs: ' + status.livyJobs);
+      status.livyTotalJobs = body && body.sessions && body.sessions.length || 0;
+      status.livyRunningJobs = _.where(body && body.sessions || [], { "state": "running" }).length;
+      console.info('livy running jobs: ' + status.livyRunningJobs);
       return callback();
     });
   }

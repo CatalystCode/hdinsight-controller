@@ -22,7 +22,8 @@
     "ms-rest-azure": "^1.14.5",
     "request": "^2.74.0",
     "serve-favicon": "^2.3.0",
-    "swig": "^1.4.2"
+    "swig": "^1.4.2",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "gulp": "^3.9.0",
