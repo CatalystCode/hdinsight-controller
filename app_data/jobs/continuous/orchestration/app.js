@@ -35,7 +35,7 @@ function run(callback) {
   var statusCollector = new StatusCollector(config);
   var hdinsightManager = statusCollector.hdinsightManager;
 
-  statusCollector.collect(function (err, status) {
+  return statusCollector.collect(function (err, status) {
 
     if (err) { return sendAlert({ error: error }); }
     if (status.queueError) { return sendAlert({ error: status.queueError }); }
@@ -121,6 +121,7 @@ function run(callback) {
       var minutesPassed = getMinutes(now - lastInactiveCheck);
       console.log('Minutes passed since inactivity of hdinsight: ' + minutesPassed);
       if (minutesPassed >= MAX_INACTIVE_TIME) {
+        console.log('Deleting HDInsight cluster');
         return hdinsightManager.deleteHDInsight(function (err) {
           if (err) { 
             sendAlert({ error: err }); 
@@ -134,11 +135,11 @@ function run(callback) {
       } else {
         return callback();        
       }
-    }    
+    }
+
+    return callback();    
   });
 
-  return callback();
-  
   function sendAlert(alert) {
 
     console.error('ALERT: ' + alert);
