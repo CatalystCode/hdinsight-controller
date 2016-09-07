@@ -32,7 +32,7 @@ function run(callback) {
   RUN_EVERY = config.jobExecutionIntervalInSeconds;
 
   // 1. Check statuses
-  console.log('Initializing statuses');
+  console.info('Initializing statuses');
   var hdinsightManager = new HDInsightManager();
   var functionsManager = new FunctionsManager();
   var appServiceClient = null;
@@ -73,7 +73,7 @@ function run(callback) {
     // Queue not empty
     // ================
     // 2. If queue is not empty && HDInsight is ResourceNotFound ==> create HDInsight
-    console.log('If queue is not empty && HDInsight is ResourceNotFound ==> create HDInsight');
+    console.info('If queue is not empty && HDInsight is ResourceNotFound ==> create HDInsight');
     if (status.queueLength > 0 && status.hdinsightStatus == 'ResourceNotFound') {
       console.log('Creating hdinsight');
       return hdinsightManager.createHDInsight(function (err) {
@@ -84,7 +84,7 @@ function run(callback) {
     }
 
     // 3. If queue is not empty && HDInsight is Running && Livy is alive && function is down ==> wake up function
-    console.log('If queue is not empty && HDInsight is Running && Livy is alive && function is down ==> wake up function');
+    console.info('If queue is not empty && HDInsight is Running && Livy is alive && function is down ==> wake up function');
     if (status.queueLength > 0 && status.hdinsightStatus == 'Running' && !status.funcActive) {
       console.log('Starting proxy app');
       return appServiceClient.start(function (err) {
@@ -98,7 +98,7 @@ function run(callback) {
     // ================
     // 4. If queue is empty && hdinsight = ResourceNotFound && function is up
     // This state is illigal and might happen after first deployment ==> shut down functions
-    console.log('If queue is empty && Livy jobs == 0 && hdinsight = ResourceNotFound && function is up');
+    console.info('If queue is empty && Livy jobs == 0 && hdinsight = ResourceNotFound && function is up');
     if (status.queueLength === 0 && status.hdinsightStatus == 'ResourceNotFound' && status.funcActive) {
         console.log('Stopping proxy app');
         return appServiceClient.stop(function (err) {
@@ -109,7 +109,7 @@ function run(callback) {
     }
 
     // 5. If queue is empty && Livy jobs == 0 && function is up | more than 15 minutes ==> shut down functions
-    console.log('If queue is empty && Livy jobs == 0 && function is up | more than 15 minutes ==> shut down functions');
+    console.info('If queue is empty && Livy jobs == 0 && function is up | more than 15 minutes ==> shut down functions');
     if (status.queueLength === 0 && status.livyJobs === 0 && status.hdinsightStatus != 'ResourceNotFound' && status.funcActive) {
       var now = new Date();
       if (!lastInactiveCheck) {
@@ -129,7 +129,7 @@ function run(callback) {
     }
     
     // 6. If queue is empty && Livy jobs == 0 && function is down | more than 15 minutes ==> shut down HDInsight
-    console.log('If queue is empty && Livy jobs == 0 && function is down | more than 15 minutes ==> shut down HDInsight');
+    console.info('If queue is empty && Livy jobs == 0 && function is down | more than 15 minutes ==> shut down HDInsight');
     if (status.queueLength === 0 && status.livyJobs === 0 && status.hdinsightStatus != 'ResourceNotFound' && status.funcActive) {
       var now = new Date();
       if (!lastInactiveCheck) {
@@ -158,7 +158,7 @@ function run(callback) {
   // 1.1. Get queue count from azure storage queue
   function checkQueue(callback) {
 
-    console.log('Checking queue size');
+    console.info('Checking queue size');
     var queueSvc = azure.createQueueService(config.clusterStorageAccountName, config.clusterStorageAccountKey);
     queueSvc.createQueueIfNotExists(config.inputQueueName, function(err, result, response){
       if (err) {
@@ -173,7 +173,7 @@ function run(callback) {
         }
 
         status.queueLength = result.approximateMessageCount;
-        console.log('Queue size: ' + status.queueLength);
+        console.info('Queue size: ' + status.queueLength);
         return callback();
       });
     });
@@ -181,7 +181,7 @@ function run(callback) {
 
   // 1.2. Get function state from ARM
   function checkFunction(callback) {
-    console.log('Checking proxy app');
+    console.info('Checking proxy app');
     functionsManager.init(function (err, _appServiceClient) {
       if (err) {
         status.funcError = err;
@@ -196,7 +196,7 @@ function run(callback) {
         }
 
         status.funcActive = result && result.properties && result.properties.state == 'Running' || false;
-        console.log('proxy app active: ' + status.funcActive);
+        console.info('proxy app active: ' + status.funcActive);
         return callback();
       })
     });
@@ -205,7 +205,7 @@ function run(callback) {
   // 1.3. Get HDInsight state from ARM
   function checkHDInsight(callback) {
 
-    console.log('Checking hdinsight');
+    console.info('Checking hdinsight');
     hdinsightManager.init(function (err) {
 
       if (err) {
@@ -231,7 +231,7 @@ function run(callback) {
           status.hdinsightError = new Error('The resulting resource is not in an expected format: ' + result);
         }
 
-        console.log('hdinsight state: ' + status.hdinsightStatus);
+        console.info('hdinsight state: ' + status.hdinsightStatus);
         return callback();
       });
 
@@ -248,7 +248,7 @@ function run(callback) {
       json: { }
     };
 
-    console.log('Checking livy state');
+    console.info('Checking livy state');
     request(options, function (err, response, body) {
 
       if (err || !response || response.statusCode != 200) {
@@ -257,21 +257,21 @@ function run(callback) {
           console.error('livy error: ' + err);
           status.livyError = err ? err : new Error (!response ? 'No response received' : 'Status code is not 200');
         } else {
-          console.log('livy is not online');
+          console.info('livy is not online');
         }
         return callback();
       }
 
       // Need to check validity and probably filter only running jobs
       status.livyJobs = response.batches.length;
-      console.log('livy jobs: ' + status.livyJobs);
+      console.info('livy jobs: ' + status.livyJobs);
       return callback();
     });
   }
 
   function sendAlert(alert) {
 
-    console.log('ALERT: ' + alert);
+    console.error('ALERT: ' + alert);
 
     var options = {
       uri: config.sendAlertUrl,
@@ -298,7 +298,7 @@ function executeContinuously() {
         console.error(err);
       }
 
-      console.log('job iteration ended.');      
+      console.info('job iteration ended.');      
     });
   } catch (err) {
       console.error('There was an unexpected error running the job:');
