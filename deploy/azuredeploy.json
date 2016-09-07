@@ -110,6 +110,7 @@
 
 		"inputQueueName": { "type": "string" },
 		"sendAlertUrl": { "type": "string" },
+		"localFileToRun": { "type": "string" },
 
 		"jobExecutionIntervalInSeconds": { 
       "type": "int", 
@@ -279,6 +280,7 @@
 
             "inputQueueName": "[parameters('inputQueueName')]",
             "sendAlertUrl": "[parameters('sendAlertUrl')]",
+            "localFileToRun": "[parameters('localFileToRun')]",
 
             "resourceGroupName": "[resourceGroup().name]",
             "location": "[resourceGroup().location]",

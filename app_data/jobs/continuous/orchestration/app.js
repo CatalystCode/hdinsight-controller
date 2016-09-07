@@ -6,7 +6,7 @@ var StatusCollector = require('../../../../lib/status-collector');
 
 var RUN_EVERY = 10; // Seconds
 var lastInactiveCheck = null;
-var MAX_INACTIVE_TIME = 15; // Minutes
+var MAX_INACTIVE_TIME = 2; // Minutes
 
 // Initialize environment, return config
 function init() {
@@ -34,7 +34,6 @@ function run(callback) {
   console.info('Initializing statuses');
   var statusCollector = new StatusCollector(config);
   var hdinsightManager = statusCollector.hdinsightManager;
-  var appServiceClient = statusCollector.appServiceClient;
 
   statusCollector.collect(function (err, status) {
 
@@ -43,6 +42,8 @@ function run(callback) {
     if (status.funcError) { return sendAlert({ error: status.funcError }); }
     if (status.hdinsightError) { return sendAlert({ error: status.hdinsightError }); }
     if (status.livyError) { return sendAlert({ error: status.livyError }); }
+
+    var appServiceClient = statusCollector.appServiceClient;
 
     // Queue not empty
     // ================

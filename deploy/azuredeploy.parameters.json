@@ -28,6 +28,7 @@
 		"clusterType": { "value": "Spark" },
 		"clusterLoginUserName": { "value": "username" },
 		"clusterLoginPassword": { "value": "GEN-PASSWORD" },
+		"localFileToRun": { "value": "script/helloworld.py" },
 
 		"clusterNodeSize": { "value": "Standard_D12" },
 		"clusterWorkerNodeCount": { "value": "2" },
