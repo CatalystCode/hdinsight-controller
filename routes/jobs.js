@@ -6,12 +6,11 @@ var router = express.Router();
 
 router.post('/push', function(req, res) {
 
-  if (!config) {
-    try {
-      config = require('../lib/config');
-    } catch (e) {
-      return res.status(400).send('There was an error reading configuration:\n' + err);
-    }
+  var config = null;
+  try {
+    config = require('../lib/config');
+  } catch (e) {
+    return res.status(400).send('There was an error reading configuration:\n' + err);
   }
 
   var data = req.body.data;
@@ -19,8 +18,9 @@ router.post('/push', function(req, res) {
       return res.status(400).send('No data parameter was supplied in the request');
   }
   
-  var retryOperations = new azure.ExponentialRetryPolicyFilter();
-  var queueSvc = azure.createQueueService().withFilter(retryOperations);
+  var queueSvc = azure.createQueueService(config.clusterStorageAccountName, config.clusterStorageAccountKey)
+      .withFilter(new azure.ExponentialRetryPolicyFilter());
+
   queueSvc.createQueueIfNotExists(config.inputQueueName, function(err) {
     if (err) {
       return res.status(400).send('There was an error reading the queue:\n' + err);
