@@ -1,10 +1,8 @@
 var azure = require('azure-storage');
 var async = require('async');
 var request = require('request');
-var _ = require('underscore');
 
-var FunctionsManager = require('../../../../lib/manage-functions');
-var HDInsightManager = require('../../../../lib/manage-hdinsight');
+var StatusCollector = require('../../../../lib/status-collector');
 
 var RUN_EVERY = 10; // Seconds
 var lastInactiveCheck = null;
@@ -34,39 +32,11 @@ function run(callback) {
 
   // 1. Check statuses
   console.info('Initializing statuses');
-  var hdinsightManager = new HDInsightManager();
-  var functionsManager = new FunctionsManager();
-  var appServiceClient = null;
-  var status = {
-    queueError: null,
-    queueLength: 0,
-    funcError: null,
-    funcActive: false,
-    hdinsightError: null,
-    hdinsightOperational: false,
-    hdinsightStatus: null,
-    hdinsightProvisioningSuccess: false,
-    hdinsightProvisioningState: null,
-    livyError: null,
-    livyTotalJobs: 0,
-    livyRunningJobs: 0
-  };
+  var statusCollector = new StatusCollector(config);
+  var hdinsightManager = statusCollector.hdinsightManager;
+  var appServiceClient = statusCollector.appServiceClient;
 
-  async.parallel([
-    
-    // 1.1. Get queue count from azure storage queue
-    checkQueue,
-    
-    // 1.2. Get function state from ARM
-    checkFunction,
-    
-    // 1.3. Get HDInsight state from ARM
-    checkHDInsight,
-    
-    // 1.4. If alive ==> Get livy jobs
-    checkLivy
-
-  ], function (err, result) {
+  statusCollector.collect(function (err, status) {
 
     if (err) { return sendAlert({ error: error }); }
     if (status.queueError) { return sendAlert({ error: status.queueError }); }
@@ -132,6 +102,8 @@ function run(callback) {
           console.log('Operation completed successfully');
           return callback();
         });
+      } else {
+        return callback();        
       }
     }
     
@@ -158,134 +130,14 @@ function run(callback) {
           console.log('Operation completed successfully');
           return callback();
         })
+      } else {
+        return callback();        
       }
     }    
   });
 
   return callback();
   
-  // 1.1. Get queue count from azure storage queue
-  function checkQueue(callback) {
-
-    console.info('Checking queue size');
-    var queueSvc = azure.createQueueService(config.clusterStorageAccountName, config.clusterStorageAccountKey);
-    queueSvc.createQueueIfNotExists(config.inputQueueName, function(err, result, response){
-      if (err) {
-        status.queueError = err;
-        return callback();
-      }
-
-      queueSvc.getQueueMetadata(config.inputQueueName, function(err, result, response){
-        if (err) {
-          status.queueError = err;
-          return callback();
-        }
-
-        status.queueLength = result.approximateMessageCount;
-        console.info('Queue size: ' + status.queueLength);
-        return callback();
-      });
-    });
-  }
-
-  // 1.2. Get function state from ARM
-  function checkFunction(callback) {
-    console.info('Checking proxy app');
-    functionsManager.init(function (err, _appServiceClient) {
-      if (err) {
-        status.funcError = err;
-        return callback();
-      }
-      
-      appServiceClient = _appServiceClient;
-      appServiceClient.get(function (err, result) {
-        if (err) {
-          status.funcError = err;
-          return callback();
-        }
-
-        status.funcActive = result && result.properties && result.properties.state == 'Running' || false;
-        console.info('proxy app active: ' + status.funcActive);
-        return callback();
-      })
-    });
-  }
-
-  // 1.3. Get HDInsight state from ARM
-  function checkHDInsight(callback) {
-
-    console.info('Checking hdinsight');
-    hdinsightManager.init(function (err) {
-
-      if (err) {
-        status.hdinsightError = err;
-        return callback();
-      }
-
-      hdinsightManager.checkHDInsight(function (err, result) {
-
-        if (err) {
-          if (err.code != 'ResourceNotFound') {
-            status.hdinsightError = err;
-          } else {
-            status.hdinsightStatus = err.code;
-          }
-          return callback();
-        }
-
-        if (result && result.cluster && result.cluster.properties && result.cluster.properties.provisioningState) {
-          status.hdinsightProvisioningSuccess = result.cluster.properties.provisioningState == 'Succeeded';
-          status.hdinsightProvisioningState = result.cluster.properties.provisioningState;
-        } else {
-          status.hdinsightError = new Error('The resulting resource is not in an expected format: ' + result);
-        }
-
-        if (result && result.cluster && result.cluster.properties && result.cluster.properties.clusterState) {
-          status.hdinsightStatus = result.cluster.properties.clusterState;
-          status.hdinsightOperational = result.cluster.properties.clusterState == 'Running' && status.hdinsightProvisioningSuccess;
-        } else {
-          status.hdinsightError = new Error('The resulting resource is not in an expected format: ' + result);
-        }
-
-        console.info('hdinsight state: ' + status.hdinsightStatus + ' with provisioning ' + status.hdinsightProvisioningState);
-        return callback();
-      });
-
-    });
-  }
-
-  // 1.4. If alive ==> Get livy jobs
-  function checkLivy(callback) {
-    var authenticationHeader = 'Basic ' + new Buffer(config.clusterLoginUserName + ':' + config.clusterLoginPassword).toString('base64');
-    var options = {
-      uri: 'https://' + config.clusterName + '.azurehdinsight.net/livy/batches',
-      method: 'GET',
-      headers: { "Authorization": authenticationHeader },
-      json: { }
-    };
-
-    console.info('Checking livy state');
-    request(options, function (err, response, body) {
-
-      if (err || !response || response.statusCode != 200) {
-        
-        if (err.code != 'ENOTFOUND') {
-          console.error('livy error: ' + err);
-          status.livyError = err ? err : new Error (!response ? 'No response received' : 'Status code is not 200');
-        } else {
-          console.info('livy is not online');
-        }
-        return callback();
-      }
-
-      // Need to check validity and probably filter only running jobs
-      status.livyTotalJobs = body && body.sessions && body.sessions.length || 0;
-      status.livyRunningJobs = _.where(body && body.sessions || [], { "state": "running" }).length;
-      console.info('livy running jobs: ' + status.livyRunningJobs);
-      return callback();
-    });
-  }
-
   function sendAlert(alert) {
 
     console.error('ALERT: ' + alert);
