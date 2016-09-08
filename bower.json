@@ -1,9 +1,24 @@
 {
-  "name": "hdinsight-controller2",
-  "version": "0.0.1",
+  "name": "webcli",
+  "homepage": "https://github.com/TODO:Update",
+  "authors": [
+    "Mor Shemesh <mor.shemesh@gmail.com>"
+  ],
+  "description": "Web Based Command Line Interface",
+  "main": "index.html",
+  "keywords": [
+    "cli"
+  ],
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
-  ]
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^2.2.3",
+    "web-cli": "^0.0.13"
+  }
 }

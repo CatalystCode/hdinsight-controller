@@ -2,6 +2,9 @@ var azure = require('azure-storage');
 var async = require('async');
 var request = require('request');
 
+var log = require('../../../../lib/log');
+var globalConfig = require('../../../../config');
+var config = globalConfig.svc;
 var StatusCollector = require('../../../../lib/status-collector');
 
 var RUN_EVERY = 10; // Seconds
@@ -9,19 +12,25 @@ var lastInactiveCheck = null;
 var MAX_INACTIVE_TIME = 2; // Minutes
 
 // Initialize environment, return config
-function init() {
-  var config = null;
-  try {
-    config = require('../../../../lib/config');
-  } catch (e) {
-    console.error(e);
-  }
-
-  return config;
+function init(callback) {
+  
+  log.init({
+    domain: process.env.COMPUTERNAME || '',
+    instanceId: log.getInstanceId(),
+    app: globalConfig.apps.orch.name,
+    level: globalConfig.log.level,
+    transporters: globalConfig.log.transporters
+  },
+    function(err) {
+      if (err) {
+        console.error(err);
+        return callback(err);
+      }
+      return callback();
+    });
 }
 
 function run(callback) {
-  var config = init();
 
   if (!config) {
     return callback(new Error('Config is not set'));
@@ -179,4 +188,7 @@ function executeContinuously() {
   }
 }
 
-setTimeout(executeContinuously, 100);
+init(function () {
+  console.log('starting server...');
+  setTimeout(executeContinuously, 100);
+});
