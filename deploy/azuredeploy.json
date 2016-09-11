@@ -169,7 +169,8 @@
             "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
           ],
           "properties": {
-            "connection_STORAGE": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
             "FUNCTIONS_EXTENSION_VERSION": "latest",
             "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
 
@@ -240,6 +241,100 @@
     {
       "apiVersion": "2015-04-01",
       "type": "Microsoft.Web/sites",
+      "name": "[variables('orchAppName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "functionapp",
+      "properties": {
+        "name": "[variables('orchAppName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "hostingEnvironment": ""
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+      ],
+      "resources": [
+        {
+          "apiVersion": "2015-04-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('orchAppName'))]",
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+          ],
+          "properties": {
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "FUNCTIONS_EXTENSION_VERSION": "latest",
+            "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
+
+            "STORAGE_ACCOUNT": "[variables('storageAccountName')]",
+            "STORAGE_KEY": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]",
+            "LOG_STORAGE_ACCOUNT": "[variables('storageAccountName')]",
+            "LOG_STORAGE_KEY": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]",
+            "LOG_LEVEL": "log",
+            "LOG_ENABLED": true,
+
+            "proxyAppName": "[variables('proxyAppName')]",
+
+            "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
+            "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
+            "servicePrincipalDomain": "[parameters('servicePrincipalDomain')]",
+            "servicePrincipalSubscriptionId": "[parameters('servicePrincipalSubscriptionId')]",
+
+            "clusterName": "[parameters('clusterName')]",
+            "clusterApiVersion": "[parameters('clusterApiVersion')]",
+            "tags": "[parameters('tags')]",
+            "clusterVersion": "[parameters('clusterVersion')]",
+            "osType": "[parameters('osType')]",
+            "clusterType": "[parameters('clusterType')]",
+            "clusterLoginUserName": "[parameters('clusterLoginUserName')]",
+            "clusterLoginPassword": "[parameters('clusterLoginPassword')]",
+
+            "clusterNodeSize": "[parameters('clusterNodeSize')]",
+            "clusterWorkerNodeCount": "[parameters('clusterWorkerNodeCount')]",
+            "sshUserName": "[parameters('sshUserName')]",
+            "sshPassword": "[parameters('sshPassword')]",
+
+            "inputQueueName": "[parameters('inputQueueName')]",
+            "sendAlertUrl": "[parameters('sendAlertUrl')]",
+            "jobExecutionIntervalInSeconds": "[parameters('jobExecutionIntervalInSeconds')]",
+
+            "resourceGroupName": "[resourceGroup().name]",
+            "location": "[resourceGroup().location]",
+            "clusterStorageAccountName": "[variables('storageAccountName')]",
+            "clusterStorageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]"
+          }
+        },
+        {
+          "apiVersion": "2015-04-01",
+          "name": "web",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('orchAppName'))]"
+          ],
+          "properties": {
+            "alwaysOn": "true"
+          }
+        },
+        {
+          "apiVersion": "2015-04-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('orchAppName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('orchRepoURL')]",
+            "branch": "[parameters('orchBranch')]",
+            "IsManualIntegration": false
+          }
+        }
+      ]
+    },
+    {
+      "apiVersion": "2015-04-01",
+      "type": "Microsoft.Web/sites",
       "name": "[variables('proxyAppName')]",
       "location": "[resourceGroup().location]",
       "kind": "functionapp",
@@ -262,7 +357,8 @@
             "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
           ],
           "properties": {
-            "connection_STORAGE": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
+            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
             "FUNCTIONS_EXTENSION_VERSION": "latest",
             "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
 
