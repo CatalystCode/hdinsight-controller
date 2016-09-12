@@ -42,26 +42,6 @@
       "outDir": null
     },
     {
-      "name": "Launch Orchestration Web Job",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceRoot}/app_data/jobs/continuous/orchestration/app.js",
-      "stopOnEntry": true,
-      "args": [],
-      "cwd": "${workspaceRoot}",
-      "preLaunchTask": null,
-      "runtimeExecutable": null,
-      "runtimeArgs": [
-        "--nolazy"
-      ],
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "externalConsole": false,
-      "sourceMaps": false,
-      "outDir": null
-    },
-    {
       "name": "Attach",
       "type": "node",
       "request": "attach",

@@ -8,5 +8,36 @@
   "LOG_STORAGE_ACCOUNT": "log storage account name",
   "LOG_STORAGE_KEY": "log storage account key",
   "LOG_LEVEL": "log",
-  "LOG_ENABLED": false
+  "LOG_ENABLED": false,
+
+
+  "servicePrincipalClientId": "00000000-0000-0000-0000-000000000000",
+  "servicePrincipalSecret": "*********************",
+  "servicePrincipalDomain": "00000000-0000-0000-0000-000000000000",
+  "servicePrincipalSubscriptionId": "00000000-0000-0000-0000-000000000000",
+
+  "proxyAppName": "<function app name>",
+  "jobExecutionIntervalInSeconds": "10",
+
+  "resourceGroupName": "<resource group the resources are deployed to>",
+  "clusterName": "<name for the hdinsight cluster resource>",
+  "location": "<geo location like 'West Europe'>",
+  "clusterApiVersion": "2015-03-01-preview",
+  "tags": "{}",
+  "clusterVersion": "3.4",
+  "osType": "Linux",
+  "clusterType": "Spark",
+  "clusterLoginUserName": "username",
+  "clusterLoginPassword": "*********",
+
+  "clusterStorageAccountName": "<storage account name for the hdinsight cluster>",
+  "clusterStorageAccountKey": "<storage account key for the hdinsight cluster>",
+
+  "inputQueueName": "pending-jobs",
+  "sendAlertUrl": "http://none.none",
+
+  "clusterNodeSize": "Standard_D12",
+  "clusterWorkerNodeCount": "2",
+  "sshUserName": "username",
+  "sshPassword": "*********"
 }
