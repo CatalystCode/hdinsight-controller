@@ -76,7 +76,7 @@ The following are the endpoints the web service exposes (Use `localhost:3000` fo
 * GET `http://{service url}/hdinsight/get`
 
 With the following response format:
-```json
+```
 {
   status: '<Provisioning State> / ResourceNotFound / Unknown',
   error: 'In case there was an error or the resource was not found',
@@ -90,7 +90,7 @@ With the following response format:
 * GET `http://{service url}/functions/status`
 
 With the following response format:
-```json
+```
 { 
   status: 'running/stopped'
 }
