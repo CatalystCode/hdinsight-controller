@@ -27,6 +27,11 @@ if (config.auth.google.enabled) {
     app.use(passport.session()); // persistent login sessions
     app.use(flash()); // use connect-flash for flash messages stored in session
     app.use(require('./routes/login')(passport));
+    
+    // Other exposed API methods
+    app.use('/hdinsight', require('./routes/hdinsight'));
+    app.use('/functions', require('./routes/functions'));
+    app.use('/jobs', require('./routes/jobs'));
 
     app.use(function (req, res, next) {
         
@@ -48,6 +53,7 @@ if (config.auth.google.enabled) {
 
 // dynamically load all plugins from /api folder
 var plugins = Plugins('api');
+
 
 // plugins are exposed on the express router property
 app.use('/api', plugins.router);

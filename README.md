@@ -21,30 +21,29 @@ The service principal will ensure that you're web service has permissions to acc
 
 # Running Locally
 After you've completed setting up the prerequisites, use the information you gathered to fill the following information
-in [setenv.sample.bat][setenv.sample.bat]:
+in [config/dev.sample.json](config/dev.sample.json):
 * servicePrincipalClientId
 * servicePrincipalSecret
 * servicePrincipalDomain
 * servicePrincipalSubscriptionId
-You can create a 'setenv.private.bat' copy which will not be checked in.
+You can create a 'config/dev.private.json' copy which will not be checked in.
 
 ## Installation
 ```
-setenv.private.bat
 npm install
 npm start
 ```
 
 # Deployment
 After you've completed setting up the prerequisites, use the information you gathered to fill the following information
-in [azuredeploy.parameters.json][deploy/azuredeploy.parameters.json]:
+in [deploy/azuredeploy.parameters.json](deploy/azuredeploy.parameters.json):
 * servicePrincipalClientId
 * servicePrincipalSecret
 * servicePrincipalDomain
 * servicePrincipalSubscriptionId
-You can create a 'azuredeploy.parameters.private.json' copy which will not be checked in.
+You can create a 'deploy/azuredeploy.parameters.private.json' copy which will not be checked in.
 
-Run The following with azure cli to deploy to the cloud:
+Run The following with azure cli from *deploy* directory to deploy to the cloud:
 
 First, login to azure cli:
 ```
@@ -57,7 +56,7 @@ azure group create <resource group name> -l <location>
 Now, deploy the json to the cloud:
 ```
 cd deploy
-azure group deployment create -f azuredeploy.json -e azuredeploy.parameters.json <resource group name> <deployment name>
+azure group deployment create -f azuredeploy.json -e azuredeploy.parameters.private.json <resource group name> <deployment name>
 ```
 
 # Endpoints
@@ -78,6 +77,8 @@ When getting an HDInsight cluster the result will be in the format:
 # See Also
 This is the repository for the function app that acts as a proxy between the queue and the hdinsight cluster
 https://github.com/CatalystCode/hdinsight-controller-proxy
+
+https://github.com/CatalystCode/hdinsight-controller-orch
 
 [//]: # (Links section)
 
