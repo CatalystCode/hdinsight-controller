@@ -72,8 +72,8 @@ azure group deployment create -f azuredeploy.json -e azuredeploy.parameters.priv
 # Endpoints
 The following are the endpoints the web service exposes (Use `localhost:3000` for running locally):
 
-* POST `http://{service url}/hdinsight/create`
-* GET `http://{service url}/hdinsight/get`
+* POST `/hdinsight/create`
+* GET `/hdinsight/get`
 
 With the following response format:
 ```
@@ -84,10 +84,10 @@ With the following response format:
 }
 ```
 
-* DELETE `http://{service url}/hdinsight/destroy`
-* POST `http://{service url}/functions/start`
-* POST `http://{service url}/functions/stop`
-* GET `http://{service url}/functions/status`
+* DELETE `/hdinsight/destroy`
+* POST `/functions/start`
+* POST `/functions/stop`
+* GET `/functions/status`
 
 With the following response format:
 ```
@@ -96,7 +96,7 @@ With the following response format:
 }
 ```
 
-* POST `http://{service url}/jobs/insert`
+* POST `/jobs/insert`
 
 
 # See Also
