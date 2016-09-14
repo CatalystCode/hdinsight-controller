@@ -60,34 +60,6 @@
         "description": "The branch of the GitHub repository to use."
       }
     },
-    "proxyRepoURL": {
-      "type": "string",
-      "defaultValue": "https://github.com/morsh/functions.git",
-      "metadata": {
-        "description": "The URL for the GitHub repository that contains the project to deploy."
-      }
-    },
-    "proxyBranch": {
-      "type": "string",
-      "defaultValue": "master",
-      "metadata": {
-        "description": "The branch of the GitHub repository to use."
-      }
-    },
-    "orchRepoURL": {
-      "type": "string",
-      "defaultValue": "https://github.com/morsh/functions.git",
-      "metadata": {
-        "description": "The URL for the GitHub repository that contains the project to deploy."
-      }
-    },
-    "orchBranch": {
-      "type": "string",
-      "defaultValue": "master",
-      "metadata": {
-        "description": "The branch of the GitHub repository to use."
-      }
-    },
 
     "servicePrincipalClientId": { "type": "string" },
 		"servicePrincipalSecret": { "type": "string" },
@@ -119,8 +91,6 @@
   },
   "variables": {
     "webAppName": "[parameters('appName')]",
-    "proxyAppName": "[concat(parameters('appName'), '-proxy')]",
-    "orchAppName": "[concat(parameters('appName'), '-orch')]",
     "hostingPlanName": "[parameters('appName')]",
     "storageAccountName": "[concat(replace(parameters('appName'),'-',''),'store')]"      
   },
@@ -178,7 +148,7 @@
             "LOG_LEVEL": "log",
             "LOG_ENABLED": true,
 
-            "proxyAppName": "[variables('proxyAppName')]",
+            "proxyAppName": "[variables('webAppName')]",
 
             "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
             "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
