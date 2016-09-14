@@ -1,19 +1,19 @@
 
-var api = { console: { autoLoad: false } };
+var api = { console: { autoLoad: true} };
 
 var express = require('express');
 var router = api.router = express.Router();
 var docRouter = require('docrouter').docRouter;
-var FunctionsManager = require('../lib/manage-functions');
+var WebJobsManager = require('../lib/manage-webjobs');
 
 module.exports = api;
 
-docRouter(router, '/api/functions', function (router) {
+docRouter(router, '/api/webjobs', function (router) {
 
   router.get('/get', function(req, res) {
     
-    var functionsManager = new FunctionsManager();
-    functionsManager.init(function (err, appServiceClient) {
+    var webjobsManager = new WebJobsManager();
+    webjobsManager.init(function (err, appServiceClient) {
 
       if (err) {
         return res.status(400).send('There was an error initializing hdinsight manager:\n' + err);
@@ -37,18 +37,18 @@ docRouter(router, '/api/functions', function (router) {
 
   },
     {
-      id: 'functions_get',
+      id: 'webjobs_get',
       name: 'get',
-      usage: 'functions get',
-      example: 'functions get',
+      usage: 'webjobs get',
+      example: 'webjobs get',
       doc: 'Getting the state of the function',
       params: { }
     });
 
   router.post('/start', function(req, res) {
     
-    var functionsManager = new FunctionsManager();
-    functionsManager.init(function (err, appServiceClient) {
+    var webjobsManager = new WebJobsManager();
+    webjobsManager.init(function (err, appServiceClient) {
 
       if (err) {
         return res.status(400).send('There was an error initializing hdinsight manager:\n' + err);
@@ -68,18 +68,18 @@ docRouter(router, '/api/functions', function (router) {
 
   },
     {
-      id: 'functions_start',
+      id: 'webjobs_start',
       name: 'start',
-      usage: 'functions start',
-      example: 'functions start',
+      usage: 'webjobs start',
+      example: 'webjobs start',
       doc: 'starting the proxy app',
       params: { }
     });
 
   router.post('/stop', function(req, res) {
     
-    var functionsManager = new FunctionsManager();
-    functionsManager.init(function (err, appServiceClient) {
+    var webjobsManager = new WebJobsManager();
+    webjobsManager.init(function (err, appServiceClient) {
 
       if (err) {
         return res.status(400).send('There was an error initializing hdinsight manager:\n' + err);
@@ -99,10 +99,10 @@ docRouter(router, '/api/functions', function (router) {
 
   },
     {
-      id: 'functions_stop',
+      id: 'webjobs_stop',
       name: 'stop',
-      usage: 'functions stop',
-      example: 'functions stop',
+      usage: 'webjobs stop',
+      example: 'webjobs stop',
       doc: 'stopping the proxy app',
       params: { }
     });

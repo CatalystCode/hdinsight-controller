@@ -330,7 +330,6 @@
       "type": "Microsoft.Web/sites",
       "name": "[variables('proxyAppName')]",
       "location": "[resourceGroup().location]",
-      "kind": "functionapp",
       "properties": {
         "name": "[variables('proxyAppName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
@@ -350,10 +349,7 @@
             "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
           ],
           "properties": {
-            "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
-            "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1,';')]",
-            "FUNCTIONS_EXTENSION_VERSION": "latest",
-            "WEBSITE_NODE_DEFAULT_VERSION": "4.2.3",
+            "WEBSITE_NODE_DEFAULT_VERSION": "4.4.7",
 
             "servicePrincipalClientId": "[parameters('servicePrincipalClientId')]",
             "servicePrincipalSecret": "[parameters('servicePrincipalSecret')]",
