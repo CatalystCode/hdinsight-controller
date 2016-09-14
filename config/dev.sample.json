@@ -16,7 +16,7 @@
   "servicePrincipalDomain": "00000000-0000-0000-0000-000000000000",
   "servicePrincipalSubscriptionId": "00000000-0000-0000-0000-000000000000",
 
-  "proxyAppName": "<function app name>",
+  "proxyAppName": "<web app name>",
   "jobExecutionIntervalInSeconds": "10",
 
   "resourceGroupName": "<resource group the resources are deployed to>",
