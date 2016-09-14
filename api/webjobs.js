@@ -25,7 +25,7 @@ docRouter(router, '/api/webjobs', function (router) {
           return res.status(400).send('There was an error starting the function app:\n' + err);
         }
 
-        console.log('Creating hdinsight...');
+        console.log('Getting webjob...');
         var funcActive = result && result.properties && result.properties.state == 'Running' || false;
         return res.json({
           status: funcActive ? 'running' : 'stopped',
@@ -60,7 +60,7 @@ docRouter(router, '/api/webjobs', function (router) {
           return res.status(400).send('There was an error starting the function app:\n' + err);
         }
 
-        console.log('Creating hdinsight...');
+        console.log('Starting webjob...');
         res.send("completed successfully");
       });
 
@@ -91,7 +91,7 @@ docRouter(router, '/api/webjobs', function (router) {
           return res.status(400).send('There was an error stopping hdinsight manager:\n' + err);
         }
 
-        console.log('Creating hdinsight...');
+        console.log('Stopping webjob...');
         res.send("completed successfully");
       });
 
