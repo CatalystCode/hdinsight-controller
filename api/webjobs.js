@@ -26,7 +26,7 @@ docRouter(router, '/api/webjobs', function (router) {
         }
 
         console.log('Getting webjob...');
-        var funcActive = result && result.properties && result.properties.state == 'Running' || false;
+        var funcActive = result && result.webjob && result.webjob.status == 'Running' || false;
         return res.json({
           status: funcActive ? 'running' : 'stopped',
           result: result
