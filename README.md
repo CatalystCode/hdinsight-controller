@@ -112,13 +112,6 @@ With the following response format:
 * POST `/jobs/insert`
 
 
-# See Also
-This is the repository for the function app that acts as a proxy between the queue and the hdinsight cluster:
-https://github.com/CatalystCode/hdinsight-controller-proxy
-
-This is the repository for the function app that acts as an automatic orchestrator of the resources:
-https://github.com/CatalystCode/hdinsight-controller-orch
-
 [//]: # (Links section)
 
    [azure-cli]: <https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/>
