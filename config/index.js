@@ -137,6 +137,10 @@ var config = {
     console: { name: 'console', desc: 'the command line console web app' },
     orch: { name: 'orch', desc: 'The web job acting as the orchestration service' },
     proxy: { name: 'proxy', desc: 'The web job acting as the proxy service' }
+  },
+  queue : { 
+    visibilityTimeout: 2 * 60,
+    checkFrequencyMsecs: 1 * 60 * 1000
   }
 };
 
