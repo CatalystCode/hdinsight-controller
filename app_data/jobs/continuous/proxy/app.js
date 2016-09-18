@@ -50,5 +50,9 @@ function startContinuousRunner() {
 function handleError(err) {
   console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
   console.error(err.stack);
-  process.exit(1);
+
+  // Letting logs time to push changes
+  setTimeout(function () {
+    process.exit(1);
+  }, 5000);
 }
