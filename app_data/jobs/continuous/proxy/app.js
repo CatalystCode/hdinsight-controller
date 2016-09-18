@@ -4,7 +4,7 @@ var fs = require('fs');
 process.on('uncaughtException', handleError);
 
 var config = require('../../../../config');
-var continuousRunner = require('../../../../lib/continuous');
+var continuousRunner = require('../../../../lib/queue-job/continuous');
 var log = require('../../../../lib/log');
 
 var webJobName = config.apps.proxy.name;
