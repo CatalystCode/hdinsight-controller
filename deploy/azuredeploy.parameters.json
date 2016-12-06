@@ -9,12 +9,6 @@
     "repoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller.git" },
     "branch": { "value": "master" },
 
-    "proxyRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-proxy.git" },
-    "proxyBranch": { "value": "master" },
-
-    "orchRepoURL": { "value": "https://github.com/CatalystCode/hdinsight-controller-orch.git" },
-    "orchBranch": { "value": "master" },
-
 		"servicePrincipalClientId": { "value": "00000000-0000-0000-0000-000000000000" },
 		"servicePrincipalSecret": { "value": "SERVICE PRINCIPAL CLIENT SECRET" },
 		"servicePrincipalDomain": { "value": "00000000-0000-0000-0000-000000000000" },
