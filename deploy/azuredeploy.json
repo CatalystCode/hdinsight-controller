@@ -132,11 +132,25 @@
       "resources": [
         {
           "apiVersion": "2015-04-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoURL')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": false
+          }
+        },
+        {
+          "apiVersion": "2015-04-01",
           "name": "appsettings",
           "type": "config",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('webAppName'))]",
-            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+            "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('webAppName'), 'web')]"
           ],
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "4.4.7",
@@ -188,19 +202,6 @@
           ],
           "properties": {
             "alwaysOn": "true"
-          }
-        },
-        {
-          "apiVersion": "2015-04-01",
-          "name": "web",
-          "type": "sourcecontrols",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
-          ],
-          "properties": {
-            "RepoUrl": "[parameters('repoURL')]",
-            "branch": "[parameters('branch')]",
-            "IsManualIntegration": false
           }
         }
       ]
