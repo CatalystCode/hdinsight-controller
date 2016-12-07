@@ -5,6 +5,7 @@ To read the full story behind the repository the [Case study placeholder](http:/
 
 # Prerequisites
 To run this example you will need the following:
+* [Bower](bower)
 * [Azure CLI][azure-cli]
 * [An active azure subscription](http://portal.azure.com)
 * [Setting up a service principal](#setting-up-service-principal)
@@ -114,6 +115,7 @@ With the following response format:
 
 [//]: # (Links section)
 
+   [bower]: <https://github.com/bower/bower>
    [azure-cli]: <https://azure.microsoft.com/en-us/documentation/articles/xplat-cli-install/>
    [create-sp-portal]: <https://azure.microsoft.com/en-us/documentation/articles/resource-group-create-service-principal-portal/>
    [create-sp-cli]: <https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal-cli/>
