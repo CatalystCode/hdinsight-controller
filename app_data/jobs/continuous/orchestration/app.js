@@ -61,8 +61,12 @@ function run(callback) {
     if (status.queueLength > 0 && status.hdinsightStatus == 'ResourceNotFound') {
       console.log('Creating hdinsight');
       return hdinsightManager.createHDInsight(function (err) {
-        if (err) { sendAlert({ error: err }); }
-        console.log('Operation completed successfully');
+        if (err) { 
+          console.log('There was a problem deploying the HDInsight cluster');
+          sendAlert({ error: err }); 
+        } else {
+          console.log('Operation completed successfully');
+        }
         return callback();
       })
     }
@@ -151,16 +155,24 @@ function run(callback) {
 
   function sendAlert(alert) {
 
-    console.error('ALERT: ' + alert);
+    console.error('ALERT: ' + JSON.stringify(alert || {}));
 
-    var options = {
-      uri: config.sendAlertUrl,
-      method: 'POST',
-      json: { alert: alert }
-    };
+    try {
+      var options = {
+        uri: config.sendAlertUrl,
+        method: 'POST',
+        json: { alert: alert }
+      };
 
-    // Currently, not handling problems with alerts
-    request(options);
+      // Currently, not handling problems with alerts
+      request(options, function (error, response, body) {
+        if (error) {
+          console.error('There was a problem sending alert, error: ', error);
+        }
+      });
+    } catch (e) {
+      console.error('There was a problem sending alert ', alert);
+    }
   }
 
   function getMinutes(diffMs) {
