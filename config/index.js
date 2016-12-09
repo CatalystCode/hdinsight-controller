@@ -166,6 +166,9 @@ config.svc = {
   clusterLoginUserName: ensureValue('clusterLoginUserName'),
   clusterLoginPassword: ensureValue('clusterLoginPassword'),
 
+  queueStorageAccountName: storage_account,
+  queueStorageAccountKey: storage_account_key,
+
   clusterStorageAccountName: ensureValue('clusterStorageAccountName'),
   clusterStorageAccountKey: ensureValue('clusterStorageAccountKey'),
   clusterContainer: ensureValue('clusterContainer'),
