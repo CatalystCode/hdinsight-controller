@@ -14,10 +14,6 @@
 		"servicePrincipalDomain": { "value": "00000000-0000-0000-0000-000000000000" },
 		"servicePrincipalSubscriptionId": { "value": "00000000-0000-0000-0000-000000000000" },
 
-		"clusterStorageAccountName": { "value": "CLUSTER STORAGE ACCOUNT NAME" },
-		"clusterStorageAccountKey": { "value": "CLUSTER STORAGE ACCOUNT KEY" },
-		"clusterContainer": { "value": "CLUSTER STORAGE ACCOUNT DEFAULT CONTAINER" },
-
 		"dataStorageAccountName": { "value": "DATA STORAGE ACCOUNT NAME" },
 		"dataStorageAccountKey": { "value": "DATA STORAGE ACCOUNT KEY" },
 
@@ -29,7 +25,6 @@
 		"clusterType": { "value": "Spark" },
 		"clusterLoginUserName": { "value": "username" },
 		"clusterLoginPassword": { "value": "GEN-PASSWORD" },
-		"localFileToRun": { "value": "script/helloworld.py" },
 
 		"clusterNodeSize": { "value": "Standard_D12" },
 		"clusterWorkerNodeCount": { "value": "2" },

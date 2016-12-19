@@ -1,0 +1,17 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "repoURL": { "value": "https://github.com/rozele/hdinsight-controller.git" },
+    "branch": { "value": "master" },
+    "clusterApiVersion": { "value": "2015-03-01-preview" },
+    "tags": { "value": "{}" },
+    "clusterVersion": { "value": "3.4"},
+    "osType": { "value": "Linux" },
+    "clusterType": { "value": "Spark" },
+    "clusterNodeSize": { "value": "Standard_D12" },
+    "clusterWorkerNodeCount": { "value": "2" },
+    "inputQueueName": { "value": "pending-jobs" },
+    "sendAlertUrl": { "value": "http://none.none" }
+ }
+}

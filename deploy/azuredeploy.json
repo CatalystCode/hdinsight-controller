@@ -48,7 +48,7 @@
     },
     "repoURL": {
       "type": "string",
-      "defaultValue": "https://github.com/morsh/functions.git",
+      "defaultValue": "https://github.com/CatalystCode/hdinsight-controller.git",
       "metadata": {
         "description": "The URL for the GitHub repository that contains the project to deploy."
       }
@@ -65,10 +65,6 @@
 		"servicePrincipalSecret": { "type": "string" },
 		"servicePrincipalDomain": { "type": "string" },
 		"servicePrincipalSubscriptionId": { "type": "string" },
-
-		"clusterStorageAccountName": { "type": "string" },
-		"clusterStorageAccountKey": { "type": "string" },
-		"clusterContainer": { "type": "string" },
 
 		"dataStorageAccountName": { "type": "string" },
 		"dataStorageAccountKey": { "type": "string" },
@@ -88,8 +84,11 @@
 		"sshPassword": { "type": "string" }, 
 
 		"inputQueueName": { "type": "string" },
-		"sendAlertUrl": { "type": "string" },
-		"localFileToRun": { "type": "string" },
+
+		"sendAlertUrl": {
+      "type": "string",
+      "defaultValue": "http://none.none"
+    },
 
 		"jobExecutionIntervalInSeconds": { 
       "type": "int", 
@@ -147,7 +146,7 @@
           "properties": {
             "RepoUrl": "[parameters('repoURL')]",
             "branch": "[parameters('branch')]",
-            "IsManualIntegration": false
+            "IsManualIntegration": true
           }
         },
         {
@@ -196,9 +195,8 @@
 
             "resourceGroupName": "[resourceGroup().name]",
             "location": "[resourceGroup().location]",
-            "clusterStorageAccountName": "[parameters('clusterStorageAccountName')]",
-            "clusterStorageAccountKey": "[parameters('clusterStorageAccountKey')]",
-            "clusterContainer": "[parameters('clusterContainer')]",
+            "clusterStorageAccountName": "[variables('storageAccountName')]",
+            "clusterStorageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]",
 
             "dataStorageAccountName": "[parameters('dataStorageAccountName')]",
             "dataStorageAccountKey": "[parameters('dataStorageAccountKey')]"
@@ -217,5 +215,15 @@
         }
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "storageAccountName": {
+      "type": "string",
+      "value": "[variables('storageAccountName')]"
+    },
+    "storageAccountKey": {
+      "type": "string",
+      "value": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]"
+    }
+  }
 }
