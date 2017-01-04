@@ -62,35 +62,35 @@
     },
 
     "servicePrincipalClientId": { "type": "string" },
-		"servicePrincipalSecret": { "type": "string" },
-		"servicePrincipalDomain": { "type": "string" },
-		"servicePrincipalSubscriptionId": { "type": "string" },
+    "servicePrincipalSecret": { "type": "string" },
+    "servicePrincipalDomain": { "type": "string" },
+    "servicePrincipalSubscriptionId": { "type": "string" },
 
-		"dataStorageAccountName": { "type": "string" },
-		"dataStorageAccountKey": { "type": "string" },
+    "dataStorageAccountName": { "type": "string" },
+    "dataStorageAccountKey": { "type": "string" },
 
-		"clusterName": { "type": "string" },
-		"clusterApiVersion": { "type": "string" },
-		"tags": { "type": "string" },
-		"clusterVersion": { "type": "string"},
-		"osType": { "type": "string" },
-		"clusterType": { "type": "string" },
-		"clusterLoginUserName": { "type": "string" },
-		"clusterLoginPassword": { "type": "string" },
+    "clusterName": { "type": "string" },
+    "clusterApiVersion": { "type": "string" },
+    "tags": { "type": "string" },
+    "clusterVersion": { "type": "string"},
+    "osType": { "type": "string" },
+    "clusterType": { "type": "string" },
+    "clusterLoginUserName": { "type": "string" },
+    "clusterLoginPassword": { "type": "string" },
 
-		"clusterNodeSize": { "type": "string" },
-		"clusterWorkerNodeCount": { "type": "string" },
-		"sshUserName": { "type": "string" },
-		"sshPassword": { "type": "string" }, 
+    "clusterNodeSize": { "type": "string" },
+    "clusterWorkerNodeCount": { "type": "string" },
+    "sshUserName": { "type": "string" },
+    "sshPassword": { "type": "string" }, 
 
-		"inputQueueName": { "type": "string" },
+    "inputQueueName": { "type": "string" },
 
-		"sendAlertUrl": {
+    "sendAlertUrl": {
       "type": "string",
       "defaultValue": "http://none.none"
     },
 
-		"jobExecutionIntervalInSeconds": { 
+    "jobExecutionIntervalInSeconds": { 
       "type": "int", 
       "defaultValue": 60
     }     
@@ -160,6 +160,7 @@
           ],
           "properties": {
             "WEBSITE_NODE_DEFAULT_VERSION": "4.4.7",
+            "scmType": "LocalGit",
 
             "STORAGE_ACCOUNT": "[variables('storageAccountName')]",
             "STORAGE_KEY": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]",
