@@ -66,6 +66,13 @@
 		"servicePrincipalDomain": { "type": "string" },
 		"servicePrincipalSubscriptionId": { "type": "string" },
 
+		"clusterStorageAccountName": { "type": "string" },
+		"clusterStorageAccountKey": { "type": "string" },
+		"clusterContainer": { "type": "string" },
+
+		"dataStorageAccountName": { "type": "string" },
+		"dataStorageAccountKey": { "type": "string" },
+
 		"clusterName": { "type": "string" },
 		"clusterApiVersion": { "type": "string" },
 		"tags": { "type": "string" },
@@ -189,8 +196,12 @@
 
             "resourceGroupName": "[resourceGroup().name]",
             "location": "[resourceGroup().location]",
-            "clusterStorageAccountName": "[variables('storageAccountName')]",
-            "clusterStorageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2015-05-01-preview').key1]"
+            "clusterStorageAccountName": "[parameters('clusterStorageAccountName')]",
+            "clusterStorageAccountKey": "[parameters('clusterStorageAccountKey')]",
+            "clusterContainer": "[parameters('clusterContainer')]",
+
+            "dataStorageAccountName": "[parameters('dataStorageAccountName')]",
+            "dataStorageAccountKey": "[parameters('dataStorageAccountKey')]"
           }
         },
         {

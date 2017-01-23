@@ -46,8 +46,8 @@ docRouter(router, '/api/jobs', function (router) {
     if (!data) {
         return res.status(400).send('No data parameter was supplied in the request');
     }
-    
-    var queueSvc = azure.createQueueService(config.clusterStorageAccountName, config.clusterStorageAccountKey)
+
+    var queueSvc = azure.createQueueService(config.queueStorageAccountName, config.queueStorageAccountKey)
         .withFilter(new azure.ExponentialRetryPolicyFilter());
 
     queueSvc.createQueueIfNotExists(config.inputQueueName, function(err) {
