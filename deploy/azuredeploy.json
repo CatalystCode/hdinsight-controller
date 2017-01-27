@@ -159,7 +159,7 @@
             "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('webAppName'), 'web')]"
           ],
           "properties": {
-            "WEBSITE_NODE_DEFAULT_VERSION": "4.4.7",
+            "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
             "scmType": "LocalGit",
 
             "STORAGE_ACCOUNT": "[variables('storageAccountName')]",
